@@ -1,4 +1,4 @@
-Sub DuplicaFogliPOU()
+Sub DuplicaFogliFile()
 
     Dim wb As Workbook
     Dim wsTemplate As Worksheet
