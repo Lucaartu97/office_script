@@ -1,0 +1,57 @@
+Sub DuplicaFogliPOU()
+
+    Dim wb As Workbook
+    Dim wsTemplate As Worksheet
+    Dim wsNew As Worksheet
+    Dim nomeFoglio As String
+    Dim i As Long
+
+    Set wb = ThisWorkbook
+    Set wsTemplate = wb.Worksheets("File01")
+
+    Application.ScreenUpdating = False
+    Application.DisplayAlerts = False
+
+    ' Aggiorna anche il foglio originale File01
+    wsTemplate.Range("B3").Value = UCase(wsTemplate.Name)
+
+    For i = 2 To 23
+
+        nomeFoglio = "File" & Format(i, "00")
+
+        If FoglioEsiste(nomeFoglio, wb) Then
+            ' Se il foglio esiste già, aggiorna solo B3
+            wb.Worksheets(nomeFoglio).Range("B3").Value = UCase(nomeFoglio)
+        Else
+            ' Duplica File01
+            wsTemplate.Copy After:=wb.Worksheets(wb.Worksheets.Count)
+            Set wsNew = ActiveSheet
+
+            ' Rinomina il nuovo foglio
+            wsNew.Name = nomeFoglio
+
+            ' Scrive il nome del foglio in maiuscolo in B3
+            wsNew.Range("B3").Value = UCase(nomeFoglio)
+        End If
+
+    Next i
+
+    Application.DisplayAlerts = True
+    Application.ScreenUpdating = True
+
+    MsgBox "Fogli creati da File01 a File23 e B3 aggiornata.", vbInformation
+
+End Sub
+
+
+Function FoglioEsiste(nomeFoglio As String, wb As Workbook) As Boolean
+
+    Dim ws As Worksheet
+
+    On Error Resume Next
+    Set ws = wb.Worksheets(nomeFoglio)
+    On Error GoTo 0
+
+    FoglioEsiste = Not ws Is Nothing
+
+End Function
